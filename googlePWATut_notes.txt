@@ -1,0 +1,107 @@
+https://developers.google.com/web/fundamentals/codelabs/your-first-pwapp/
+
+
+https://darksky.net/dev
+
+https://glitch.com/
+
+https://github.com/googlecodelabs/your-first-pwapp.git
+
+use this example to setup module to import keys from config file.
+NOTE: require does not need .js, also uses relative path.
+https://stackabuse.com/how-to-use-module-exports-in-node-js/
+
+npm install
+node serverjs
+
+localhost:8000
+
+
+https://www.npmjs.com/package/express-http-to-https
+
+
+# this tut doesn't work.
+https://contextneutral.com/story/creating-an-https-server-with-nodejs-and-express
+openssl req -new -newkey rsa:2048 -nodes -out mydomain.csr -keyout private.key
+
+#try this
+https://hackernoon.com/set-up-ssl-in-nodejs-and-express-using-openssl-f2529eab5bb
+#run from git bash, needs a unix shell, not dos.
+#run from ubuntu?
+openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365
+#password = 123abc
+
+
+#above didn't work either. this looks good.
+https://stackoverflow.com/questions/21397809/create-a-trusted-self-signed-ssl-cert-for-localhost-for-use-with-express-node
+
+https://api.darksky.net/forecast/DARKSKY_API_KEY/40.7720232,-73.9732319
+
+
+
+git remote show origin
+git config --list
+
+git config credential.helper store
+git pull
+
+You could also disable use of the Git credential cache using
+
+git config --global --unset credential.helper
+
+Then reset this, and you would continue to have the cached credentials
+available for other repositories (if any).
+
+You may also need to do
+git config --system --unset credential.helper
+
+error: could not lock config file C:/Program Files/Git/mingw64/etc/gitconfig: Permission denied
+
+if this has been set in the system configuration file
+
+
+git config --global credential.helper wincred
+git config --list
+git config --global --unset credential.helper
+git config --system --unset credential.helper
+
+git config --global user.name "blah"
+git config --global user.email "blah"
+git config --global user.password "blah"
+git config --global user.password --replace-all "blah"
+warning: user.password has multiple values
+
+git config --local  --get-all user.name #local repo git config file)
+git config --global --get-all user.name #user config file)
+git config --system --get-all user.name #system git config file)
+
+git config --local  --get-all user.password
+git config --global --get-all user.password
+git config --system --get-all user.password
+git config --local  --get-all user.email
+git config --global --get-all user.email
+git config --system --get-all user.email
+git config --local  --get-all user.name
+git config --global --get-all user.name
+git config --system --get-all user.name
+git config --global --unset user.name
+git config --global --unset user.email
+git config --global --unset user.password
+
+git config --global --replace-all user.password "blah"
+
+git config --global user.name "blah"
+git config --global user.email "blah"
+git config --global user.password "blah"
+
+git config --global --edit
+git config --system --edit
+git config --local --edit
+
+git config --global --list
+git config --system --list
+git config --local --list
+
+
+git push -u origin master
+C:/Program Files/Git/mingw64/ssl/certs/ca-bundle.crt

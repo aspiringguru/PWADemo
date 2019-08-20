@@ -18,12 +18,12 @@
 'use strict';
 
 // CODELAB: Update cache names any time any of the cached files change.
-const CACHE_NAME = 'static-cache-v1';
-
-// CODELAB: Add list of files to cache here.
 const FILES_TO_CACHE = [
     '/offline.html',
 ];
+const CACHE_NAME = 'static-cache-v1';
+
+// CODELAB: Add list of files to cache here.
 
 self.addEventListener('install', (evt) => {
   console.log('[ServiceWorker] Install');
@@ -41,6 +41,8 @@ self.addEventListener('install', (evt) => {
 self.addEventListener('activate', (evt) => {
   console.log('[ServiceWorker] Activate');
   // CODELAB: Remove previous cached data from disk.
+  // This code ensures that your service worker updates its cache whenever
+  // any of the app shell files change.
   evt.waitUntil(
     caches.keys().then((keyList) => {
       return Promise.all(keyList.map((key) => {
@@ -67,6 +69,7 @@ self.addEventListener('fetch', (evt) => {
             .catch(() => {
               return caches.open(CACHE_NAME)
                   .then((cache) => {
+                    console.log("caught error from fetch(evt.request), returning offline.html")
                     return cache.match('offline.html');
                   });
             })

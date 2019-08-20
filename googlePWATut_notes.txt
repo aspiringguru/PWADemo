@@ -1,3 +1,6 @@
+node server.js
+up to > // CODELAB: Log user response to prompt.
+
 https://developers.google.com/web/fundamentals/codelabs/your-first-pwapp/
 
 

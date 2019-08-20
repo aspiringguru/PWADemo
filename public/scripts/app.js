@@ -163,7 +163,7 @@ function getForecastFromNetwork(coords) {
  */
 function getForecastFromCache(coords) {
   // CODELAB: Add code to get weather forecast from the caches object.
-  
+
   if (!('caches' in window)) {
   return null;
 }
@@ -212,13 +212,21 @@ function updateData() {
   Object.keys(weatherApp.selectedLocations).forEach((key) => {
     const location = weatherApp.selectedLocations[key];
     const card = getForecastCard(location);
-    // CODELAB: Add code to call getForecastFromCache
-
+    // CODELAB: Add code to call getForecastFromCache.
+    //app now makes two requests, one from cache, then from network.
+    getForecastFromCache(location.geo)
+        .then((forecast) => {
+          renderForecast(card, forecast);
+        });
     // Get the forecast data from the network.
     getForecastFromNetwork(location.geo)
         .then((forecast) => {
           renderForecast(card, forecast);
         });
+        // If the data on the element is newer, skip the update.
+    if (lastUpdated >= data.currently.time) {
+      return;
+    }
   });
 }
 

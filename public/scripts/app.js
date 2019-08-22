@@ -223,10 +223,6 @@ function updateData() {
         .then((forecast) => {
           renderForecast(card, forecast);
         });
-        // If the data on the element is newer, skip the update.
-    if (lastUpdated >= data.currently.time) {
-      return;
-    }
   });
 }
 

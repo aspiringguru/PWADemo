@@ -1,5 +1,9 @@
+cd D:\2018_working\coding\googlePWATut
 node server.js
-up to > // CODELAB: Log user response to prompt.
+localhost:5000
+
+up to > finished
+
 
 https://developers.google.com/web/fundamentals/codelabs/your-first-pwapp/
 
@@ -22,8 +26,12 @@ node serverjs
 
 localhost:8000
 
+https://certbot.eff.org
 
 https://www.npmjs.com/package/express-http-to-https
+
+useful? need to translate into this repo 
+https://timonweb.com/posts/running-expressjs-server-over-https/
 
 
 # this tut doesn't work.

@@ -1,5 +1,5 @@
 #reworking to new account in sleepyhollow
-aws public ip = 52.62.2.80  
+aws public ip = 52.62.2.80
 ec2-52-62-2-80.ap-southeast-2.compute.amazonaws.com
 
 
@@ -97,6 +97,7 @@ server_name pwademo.duckdns.org www.pwademo.duckdns.org
 
 sudo nginx -t
 sudo systemctl reload nginx
+
 
 #skip step 3 in digitalocean instructions. edit aws security instead.
 #in aws console > ec2 > instance > security group

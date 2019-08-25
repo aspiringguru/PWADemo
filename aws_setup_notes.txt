@@ -1,5 +1,5 @@
 #reworking to new account in sleepyhollow
-aws public ip = 52.62.2.80
+aws public ip = 52.62.2.80  
 ec2-52-62-2-80.ap-southeast-2.compute.amazonaws.com
 
 
@@ -9,8 +9,6 @@ ssh -i /d/2018_working/coding/sleepyhollowAWSAugust2019.pem ubuntu@ec2-52-62-2-8
 ssh -i /d/2018_working/coding/sleepyhollowAWSAugust2019.pem ubuntu@52.62.2.80
 #below works after duckdns is setup
 ssh -i /d/2018_working/coding/sleepyhollowAWSAugust2019.pem ubuntu@pwademo.duckdns.org
-
-http://3.104.119.239/latest/meta-data/placement/availability-zone
 
 pwademo.duckdns.org
 
@@ -92,7 +90,7 @@ sudo add-apt-repository ppa:certbot/certbot
 sudo apt install python-certbot-nginx
 
 less /etc/nginx/sites-available/default
-cd /etc/nginx/sites-available/default
+cd /etc/nginx/sites-available/
 
 sudo vim /etc/nginx/sites-available/default
 server_name pwademo.duckdns.org www.pwademo.duckdns.org
@@ -249,3 +247,26 @@ npm install
 node PWADemo_server.js
 pm2 start PWADemo_server.js
 #
+
+
+windows whois > https://docs.microsoft.com/en-us/sysinternals/
+#download unzip into dir, add dir to PATH
+
+sudo apt-get install traceroute
+traceroute automationservices.host
+#check domain has been propagated
+https://lookup.icann.org/lookup
+namecheap.com
+#automationservices.host wont resolve??
+peerbanking.com.au
+
+sudo certbot --nginx -d peerbanking.com.au -d www.peerbanking.com.au
+
+#setup nginx to host automationservices.host
+cd /etc/nginx/sites-available/
+
+sudo vim /etc/nginx/sites-available/default
+server_name pwademo.duckdns.org www.pwademo.duckdns.org
+
+sudo nginx -t
+sudo systemctl reload nginx

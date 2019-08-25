@@ -1,0 +1,251 @@
+#reworking to new account in sleepyhollow
+aws public ip = 52.62.2.80
+ec2-52-62-2-80.ap-southeast-2.compute.amazonaws.com
+
+
+https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AccessingInstancesLinux.html
+
+ssh -i /d/2018_working/coding/sleepyhollowAWSAugust2019.pem ubuntu@ec2-52-62-2-80.ap-southeast-2.compute.amazonaws.com
+ssh -i /d/2018_working/coding/sleepyhollowAWSAugust2019.pem ubuntu@52.62.2.80
+#below works after duckdns is setup
+ssh -i /d/2018_working/coding/sleepyhollowAWSAugust2019.pem ubuntu@pwademo.duckdns.org
+
+http://3.104.119.239/latest/meta-data/placement/availability-zone
+
+pwademo.duckdns.org
+
+https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-ubuntu-18-04
+#NB: skip the instructions for default 'old' version.
+
+cd ~
+curl -sL https://deb.nodesource.com/setup_10.x -o nodesource_setup.sh
+less nodesource_setup.sh
+sudo bash nodesource_setup.sh
+sudo apt-get install -y nodejs
+nodejs --version
+node --version
+npm --version
+
+
+#setup simple testServer on aws to test security rules work
+mkdir testServer
+cd testServer
+vim testServer.js
+-------------------------------------------------
+// content of index.js
+const http = require('http')
+const port = 5000
+
+const requestHandler = (request, response) => {
+  console.log(request.url)
+  response.end('Hello Node.js Server!')
+}
+
+const server = http.createServer(requestHandler)
+
+server.listen(port, (err) => {
+  if (err) {
+    return console.log('something bad happened', err)
+  }
+
+  console.log(`server is listening on ${port}`)
+})
+-------------------------------------------------
+node testServer.js
+#test maps to ip number
+http://52.62.2.80:5000/
+#register domain with duckdns
+#update the duckdns ip registration
+#test the domain mapping works
+pwademo.duckdns.org:5000
+https://www.duckdns.org/install.jsp?tab=linux-cron&domain=pwademo
+
+#check if cron running
+ps -ef | grep cr[o]n
+
+#check curl installed
+curl --version
+
+mkdir duckdns
+cd duckdns
+vi duck.sh
+#insert mode
+#copy script from the duckdns.org/install page above
+:wq to save and exit
+ls -la
+chmod 700 duck.sh
+ls -la
+#edit the crontab config file
+crontab -e
+#select editor (vim)
+#add this line to end of file
+*/5 * * * * ~/duckdns/duck.sh >/dev/null 2>&1
+
+less duck.log
+
+if contents = "OK" then good
+if contents = "KO" then bad
+
+#now setup nginx to redirect http to https
+https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-18-04
+sudo add-apt-repository ppa:certbot/certbot
+sudo apt install python-certbot-nginx
+
+less /etc/nginx/sites-available/default
+cd /etc/nginx/sites-available/default
+
+sudo vim /etc/nginx/sites-available/default
+server_name pwademo.duckdns.org www.pwademo.duckdns.org
+
+sudo nginx -t
+sudo systemctl reload nginx
+
+#skip step 3 in digitalocean instructions. edit aws security instead.
+#in aws console > ec2 > instance > security group
+add port 80 (http) and port 443 (https) to incoming, allow from anywhere.
+
+certbot --version
+#sudo certbot --nginx -d example.com -d www.example.com
+sudo certbot --nginx -d pwademo.duckdns.org -d www.pwademo.duckdns.org
+
+IMPORTANT NOTES:
+ - Congratulations! Your certificate and chain have been saved at:
+   /etc/letsencrypt/live/pwademo.duckdns.org/fullchain.pem
+   Your key file has been saved at:
+   /etc/letsencrypt/live/pwademo.duckdns.org/privkey.pem
+   Your cert will expire on 2019-11-20. To obtain a new or tweaked
+   version of this certificate in the future, simply run certbot again
+   with the "certonly" option. To non-interactively renew *all* of
+   your certificates, run "certbot renew"
+ - Your account credentials have been saved in your Certbot
+   configuration directory at /etc/letsencrypt. You should make a
+   secure backup of this folder now. This configuration directory will
+   also contain certificates and private keys obtained by Certbot so
+   making regular backups of this folder is ideal.
+
+https://www.ssllabs.com/ssltest/analyze.html?d=pwademo.duckdns.org
+https://www.ssllabs.com/ssltest/analyze.html?d=www.pwademo.duckdns.org
+
+sudo certbot renew --dry-run
+#test this runs in browser ok
+https://pwademo.duckdns.org/
+
+This tutorial to map nginx to node server works
+https://www.sitepoint.com/configuring-nginx-ssl-node-js/
+sudo vim /etc/nginx/sites-available/default
+#clean out comments to improve readability
+
+#replace existing location / { ... } above with new location / { ... } below
+#-------------------------------------------------------
+location / {
+                # First attempt to serve request as file, then
+                # as directory, then fall back to displaying a 404.
+                try_files $uri $uri/ =404;
+        }
+#-------------------------------------------------------
+#replace existing location / { ... }
+#above with new location / { ... } below
+#NB: check port number matches nodejs app port #
+#-------------------------------------------------------
+location / {
+    proxy_pass http://localhost:5000;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection 'upgrade';
+    proxy_set_header Host $host;
+    proxy_cache_bypass $http_upgrade;
+  }
+#-------------------------------------------------------
+#test nginx config
+sudo nginx -t
+#if all good, restart nginx
+sudo service nginx restart
+#NB: check nodejs server is running > pm2 not setup to manage node yet.
+cd ~
+cd testServer
+node testServer.js
+#vist https://pwademo.duckdns.org/ maps to the nodejs server on https.
+
+can easily add more domains
+bad part: letsencrypt edits /etc/nginx/sites-available/default
+instead of creating new file in /etc/nginx/sites-available/
+
+
+https://www.digitalocean.com/community/tutorials/how-to-set-up-a-node-js-application-for-production-on-ubuntu-18-04
+
+#skip the install node section as already installed above
+#skip the create node app section as already have a simple app
+sudo apt install build-essential
+#0 upgraded, 0 newly installed, 0 to remove and 18 not upgraded.
+#jump to Step 3 — Installing PM2
+sudo npm install pm2@latest -g
+#output from installing pm2 as below
+#-----------------------------------------------------------
+PM2 is a Production Process Manager for Node.js applications
+with a built-in Load Balancer.
+
+Start and Daemonize any application:
+$ pm2 start app.js
+
+Load Balance 4 instances of api.js:
+$ pm2 start api.js -i 4
+
+Monitor in production:
+$ pm2 monitor
+
+Make pm2 auto-boot at server restart:
+$ pm2 startup
+
+pm2 start testServer
+pm2 stop testServer
+pm2 list
+
+
+To go further checkout:
+http://pm2.io/
+#-----------------------------------------------------------
+pm2 --version
+#from directory containing the node server app
+cd /home/ubuntu/testServer
+pm2 start testServer.js
+#output shows list of apps running under pm2
+pm2 status
+
+pm2 startup systemd
+#NB: pm2 startup systemd auto generates bash command with the current user name
+##double check this username is intended
+sudo env PATH=$PATH:/usr/bin /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u ubuntu --hp /home/ubuntu
+pm2 save
+pm2 status
+
+#sudo systemctl start pm2-ubuntu
+#systemctl status pm2-ubuntu
+
+#step 4 already done
+
+#completed setup of
+# sample nodejs server
+# domain mapped to ip via duck dns
+# auto update of duck dns via cron job scheduled every 5 minutes
+# nginx proxy configured to map domain to port number
+# pm2 configured to autostart nodejs server and restart if nodejs crashes
+
+# not done
+#pm2.io configured to monitor uptime
+
+#-----------------------
+#now setup the PWA project on the aws server
+# do this since .config owned by root by default. this is bad.
+sudo chown -R ubuntu /home/ubuntu/
+
+git clone https://github.com/aspiringguru/PWADemo.git
+cd PWADemo
+#rename the server file to make easier to track in pm2 status
+mv server.js PWADemo_server.js
+
+#install required modules (references package.json)
+npm install
+#check PWADemo_server.js will run under node
+node PWADemo_server.js
+pm2 start PWADemo_server.js
+#

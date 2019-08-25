@@ -26,27 +26,4 @@ node serverjs
 
 localhost:8000
 
-https://certbot.eff.org
-
-https://www.npmjs.com/package/express-http-to-https
-
-useful? need to translate into this repo 
-https://timonweb.com/posts/running-expressjs-server-over-https/
-
-
-# this tut doesn't work.
-https://contextneutral.com/story/creating-an-https-server-with-nodejs-and-express
-openssl req -new -newkey rsa:2048 -nodes -out mydomain.csr -keyout private.key
-
-#try this
-https://hackernoon.com/set-up-ssl-in-nodejs-and-express-using-openssl-f2529eab5bb
-#run from git bash, needs a unix shell, not dos.
-#run from ubuntu?
-openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365
-#password = 123abc
-
-
-#above didn't work either. this looks good.
-https://stackoverflow.com/questions/21397809/create-a-trusted-self-signed-ssl-cert-for-localhost-for-use-with-express-node
-
-https://api.darksky.net/forecast/DARKSKY_API_KEY/40.7720232,-73.9732319
+#refer instructions in aws_setup_notes.txt

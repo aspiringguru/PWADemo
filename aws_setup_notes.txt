@@ -271,3 +271,88 @@ server_name pwademo.duckdns.org www.pwademo.duckdns.org
 
 sudo nginx -t
 sudo systemctl reload nginx
+
+
+https://www.digitalocean.com/community/tutorials/how-to-set-up-nginx-server-blocks-virtual-hosts-on-ubuntu-16-04
+sudo mkdir -p /var/www/peerbanking.com.au/html
+sudo chown -R $USER:$USER /var/www/peerbanking.com.au/html
+sudo chmod -R 755 /var/www
+echo $USER
+ls -la /var/www/
+sudo chmod -R 755 /var/www
+sudo vim /var/www/peerbanking.com.au/html/index.html
+#--------------------------------------------------------
+<html>
+    <head>
+        <title>Welcome to peerbanking.com.au!</title>
+    </head>
+    <body>
+        <h1>Welcome to peerbanking.com.au!</h1>
+    </body>
+</html>
+#--------------------------------------------------------
+#don't need this since edited sites-available/default
+# instead of creating new file > sites-available/peerbanking.com.au
+#sudo ln -s /etc/nginx/sites-available/peerbanking.com.au /etc/nginx/sites-enabled/
+
+sudo nginx -t
+sudo systemctl reload nginx
+#open url in browser
+peerbanking.com.au
+#---------------------------------------------------------
+sudo certbot --nginx -d peerbanking.com.au -d www.peerbanking.com.au
+# peerbanking.com.au not resolving to an ip ?? redid route53 @ 910pm
+sudo certbot --nginx  -d www.peerbanking.com.au
+
+
+Congratulations! You have successfully enabled https://www.peerbanking.com.au
+
+You should test your configuration at:
+https://www.ssllabs.com/ssltest/analyze.html?d=www.peerbanking.com.au
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+IMPORTANT NOTES:
+ - Congratulations! Your certificate and chain have been saved at:
+   /etc/letsencrypt/live/www.peerbanking.com.au/fullchain.pem
+   Your key file has been saved at:
+   /etc/letsencrypt/live/www.peerbanking.com.au/privkey.pem
+   Your cert will expire on 2019-11-23. To obtain a new or tweaked
+   version of this certificate in the future, simply run certbot again
+   with the "certonly" option. To non-interactively renew *all* of
+   your certificates, run "certbot renew"
+#----------------------------------------------------------------------
+
+sudo vim /etc/nginx/sites-available/default
+
+sudo nginx -t
+sudo systemctl reload nginx
+sudo systemctl stop nginx
+sudo systemctl start nginx
+pm2 start testServer
+pm2 start peerbankingServer
+
+#---------------------------------------------------------------
+mkdir peerbanking
+cp testServer/testServer.js  peerbanking/peerbankingServer.js
+#edit to run on port 6000
+#nginx default has a new server block for peerbanking.com.au on port 6000
+pm2 status
+#check pwd
+pm2 start peerbanking/peerbankingServer.js
+
+sudo lsof -i -P -n | grep LISTEN
+sudo netstat -tulpn | grep LISTEN
+sudo lsof -i:22 ## see a specific port such as 22 ##
+sudo lsof -i:5000
+sudo lsof -i:6000
+
+lynx peerbanking.com.au
+
+#------------------------------------------------------
+https://www.liquidweb.com/kb/how-to-set-up-multiple-ssls-on-one-ip-with-nginx/
+nginx -V
+#need to see this line in output
+TLS SNI support enabled
+
+sudo systemctl reload nginx
+nginx -T

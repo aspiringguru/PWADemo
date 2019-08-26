@@ -1,0 +1,77 @@
+server {
+
+	listen 80 default_server;
+	listen [::]:80 default_server;
+	
+	root /var/www/html;
+
+        index index.html index.htm index.nginx-debian.html;
+
+	server_name _;
+
+        location / {
+                # First attempt to serve request as file, then
+                # as directory, then fall back to displaying a 404.
+                try_files $uri $uri/ =404;
+        }
+
+}
+
+server {
+
+        listen 80;
+        listen [::]:80;
+
+        root /var/www/peerbanking.com.au/html;
+
+        index index.html;
+
+        server_name peerbanking.com.au www.peerbanking.com.au;
+
+        location / {
+                # First attempt to serve request as file, then
+                # as directory, then fall back to displaying a 404.
+                try_files $uri $uri/ =404;
+        }
+
+}
+
+server {
+
+        listen 80;
+        listen [::]:80;
+
+        root /var/www/test.peerbanking.com.au/html;
+
+        index index.html;
+
+        server_name test.peerbanking.com.au www.test.peerbanking.com.au;
+
+        location / {
+                # First attempt to serve request as file, then
+                # as directory, then fall back to displaying a 404.
+                try_files $uri $uri/ =404;
+        }
+
+}
+
+
+server {
+
+        listen 80;
+        listen [::]:80;
+
+        root /var/www/automationservices.host/html;
+
+        index index.html;
+
+        server_name automationservices.host www.automationservices.host;
+
+        location / {
+                # First attempt to serve request as file, then
+                # as directory, then fall back to displaying a 404.
+                try_files $uri $uri/ =404;
+        }
+
+}
+

@@ -7,6 +7,8 @@ https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AccessingInstancesLinux.html
 
 ssh -i /d/2018_working/coding/sleepyhollowAWSAugust2019.pem ubuntu@ec2-52-62-2-80.ap-southeast-2.compute.amazonaws.com
 ssh -i /d/2018_working/coding/sleepyhollowAWSAugust2019.pem ubuntu@52.62.2.80
+sftp -i /d/2018_working/coding/sleepyhollowAWSAugust2019.pem ubuntu@52.62.2.80
+
 #below works after duckdns is setup
 ssh -i /d/2018_working/coding/sleepyhollowAWSAugust2019.pem ubuntu@pwademo.duckdns.org
 
@@ -281,6 +283,25 @@ echo $USER
 ls -la /var/www/
 sudo chmod -R 755 /var/www
 sudo vim /var/www/peerbanking.com.au/html/index.html
+
+sudo mkdir -p /var/www/test.peerbanking.com.au/html
+ls -la /var/www/test.peerbanking.com.au/
+sudo chown -R $USER:$USER /var/www/test.peerbanking.com.au/html
+sudo chmod -R 755 /var/www
+echo $USER
+ls -la /var/www/
+sudo chmod -R 755 /var/www
+sudo vim /var/www/test.peerbanking.com.au/html/index.html
+
+#repeat for automationservices.host
+sudo mkdir -p /var/www/automationservices.host/html
+ls -la /var/www/automationservices.host/
+sudo chown -R $USER:$USER /var/www/automationservices.host/html
+sudo chmod -R 755 /var/www
+echo $USER
+ls -la /var/www/
+sudo vim /var/www/automationservices.host/html/index.html
+
 #--------------------------------------------------------
 <html>
     <head>
@@ -354,5 +375,15 @@ nginx -V
 #need to see this line in output
 TLS SNI support enabled
 
+sudo nginx -t
 sudo systemctl reload nginx
-nginx -T
+
+access_log /var/log/nginx/access.log
+error_log /var/log/nginx/error.log
+
+
+sudo certbot --nginx -d www.peerbanking.com.au -d peerbanking.com.au
+#creates cert file
+/etc/letsencrypt/renewal/www.peerbanking.com.au.conf
+/etc/letsencrypt/live/www.peerbanking.com.au/fullchain.pem
+/etc/letsencrypt/live/www.peerbanking.com.au/privkey.pem
